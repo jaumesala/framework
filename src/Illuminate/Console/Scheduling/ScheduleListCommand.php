@@ -58,7 +58,7 @@ class ScheduleListCommand extends Command
         $events = $this->getEvents();
 
         if (empty($events)) {
-            return $this->info('Your application has no scheduled commands to run.');
+            return $this->info('There are no scheduled commands to list.');
         }
 
         $this->displayScheduledEvents($events);
