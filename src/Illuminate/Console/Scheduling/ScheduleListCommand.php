@@ -33,7 +33,7 @@ class ScheduleListCommand extends Command
      *
      * @var array
      */
-    protected $headers = ['Command', 'Expression', 'Maintenance', 'Overlap', 'Output', 'Append'];
+    protected $headers = ['Command', 'Next execution', 'Maintenance', 'Overlap', 'Output', 'Append'];
 
     /**
      * Create a new command instance.
@@ -88,12 +88,23 @@ class ScheduleListCommand extends Command
     {
         return [
             'command'     => $this->getEventCommandName($event),
-            'expression'  => $event->getExpression(),
+            'execution'   => $this->getEventExecution($event),
             'maintenance' => $event->evenInMaintenanceMode ? 'Execute' : 'Skip',
             'overlapping' => $event->withoutOverlapping ? 'Prevent' : 'Allow',
             'output'      => $this->getEventCommandOutput($event),
             'append'      => $this->getEventAppend($event),
         ];
+    }
+
+    /**
+     * Get the formated event's next execution time.
+     *
+     * @param  \Illuminate\Console\Scheduling\Event  $event
+     * @return string
+     */
+    protected function getEventExecution(Event $event)
+    {
+        return $event->nextRunDate().' ('.($event->timezone ?: $this->laravel->config->get('app.timezone')).')';
     }
 
     /**
